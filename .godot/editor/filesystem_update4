@@ -1,7 +1,4 @@
 res://main.tscn
-res://Ball.gd
-res://robot_arm.tscn
 res://ball.gd
-res://arm.gd
-res://play.gd
 res://label.gd
+res://robot_arm.tscn

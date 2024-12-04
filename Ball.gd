@@ -4,6 +4,7 @@ signal ball_destroyed(count: int)
 
 var destroyed_count = 0
 var spawn_position = Vector3(0, 5, 0)
+var is_resetting = false  # Add this to prevent double resets
 
 func _ready():
 	var notifier = VisibleOnScreenNotifier3D.new()
@@ -14,14 +15,18 @@ func _ready():
 	position = spawn_position
 
 func _physics_process(_delta):
-	if position.y < -30:
+	if position.y < -30 and !is_resetting:
 		reset_ball()
 
 func _on_screen_exited():
-	print("Ball left screen!")
-	reset_ball()
+	if !is_resetting:
+		print("Ball left screen!")
 
 func reset_ball():
+	if is_resetting:
+		return
+		
+	is_resetting = true
 	destroyed_count += 1
 	print("Ball reset! Times destroyed: ", destroyed_count)
 	emit_signal("ball_destroyed", destroyed_count)
@@ -30,3 +35,7 @@ func reset_ball():
 	rotation = Vector3.ZERO
 	linear_velocity = Vector3.ZERO
 	angular_velocity = Vector3.ZERO
+	
+	# Reset the flag after a short delay
+	await get_tree().create_timer(0.1).timeout
+	is_resetting = false

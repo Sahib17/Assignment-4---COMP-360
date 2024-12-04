@@ -1,9 +1,10 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1733348482
-arm.gd::GDScript::-1::1733184314::0::1::::<>Node3D<>::
+::res://::1733354181
+arm.gd::GDScript::-1::1733351297::0::1::::<>Node3D<>::
 arm.glb::PackedScene::3294502883904506193::1733186410::1733186445::1::::<><>::
-Ball.gd::GDScript::-1::1733184539::0::1::::<>RigidBody3D<>::
+ball.gd::GDScript::-1::1733352055::0::1::::<>RigidBody3D<>::
 icon.svg::CompressedTexture2D::8548030750168265125::1733183782::1733183832::1::::<><>::
-main.tscn::PackedScene::7072039013713649955::1733256712::0::1::::<><>::uid://d1p66onp0vo8q::::res://robot_arm.tscn
-play.gd::GDScript::-1::1733183782::0::1::::<>Node3D<>::
-robot_arm.tscn::PackedScene::9017075994490995842::1733256712::0::1::::<><>::uid://bm648mhyelmcf::::res://arm.glb<>res://play.gd
+label.gd::GDScript::-1::1733352093::0::1::::<>Label<>::
+main.tscn::PackedScene::7072039013713649955::1733352129::0::1::::<><>::uid://d1p66onp0vo8q::::res://robot_arm.tscn<>res://ball.gd<>res://label.gd
+play.gd::GDScript::-1::1733351297::0::1::::<>Node3D<>::
+robot_arm.tscn::PackedScene::9017075994490995842::1733352097::0::1::::<><>::uid://bm648mhyelmcf::::res://arm.glb<>res://play.gd
