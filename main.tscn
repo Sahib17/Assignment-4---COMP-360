@@ -1,6 +1,8 @@
-[gd_scene load_steps=24 format=3 uid="uid://c700pjn84lp4f"]
+[gd_scene load_steps=27 format=3 uid="uid://c700pjn84lp4f"]
 
 [ext_resource type="PackedScene" uid="uid://d1p66onp0vo8q" path="res://robot_arm.tscn" id="1_sb113"]
+[ext_resource type="Script" path="res://ball.gd" id="2_0ggc7"]
+[ext_resource type="Script" path="res://label.gd" id="3_kdewb"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fwl0a"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -71,6 +73,8 @@ size = Vector3(0.2, 0.5, 4.5)
 [sub_resource type="BoxShape3D" id="BoxShape3D_vvu5h"]
 size = Vector3(0.2, 0.5, 4.5)
 
+[sub_resource type="SystemFont" id="SystemFont_jl1ww"]
+
 [node name="origin" type="Node3D"]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
@@ -92,6 +96,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0284376, 4.10597, -0.16341
 physics_material_override = SubResource("PhysicsMaterial_wbuve")
 linear_damp = 0.1
 angular_damp = 0.05
+script = ExtResource("2_0ggc7")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Ball"]
 mesh = SubResource("SphereMesh_x0rr2")
@@ -180,3 +185,16 @@ mesh = SubResource("BoxMesh_vwuqt")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D8"]
 shape = SubResource("BoxShape3D_vvu5h")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="Control"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 50.0
+theme_override_fonts/font = SubResource("SystemFont_jl1ww")
+script = ExtResource("3_kdewb")
