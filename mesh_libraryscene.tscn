@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://5c8vg8lfnx2j"]
+
+[ext_resource type="Texture2D" uid="uid://n1qrql737tr7" path="res://mossy_brick_diff_2k.jpg" id="1_taodb"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g2yrq"]
+albedo_texture = ExtResource("1_taodb")
+
+[sub_resource type="BoxMesh" id="BoxMesh_2qvvp"]
+material = SubResource("StandardMaterial3D_g2yrq")
+size = Vector3(10, 20, 10)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_r7oxa"]
+size = Vector3(10, 20, 10)
+
+[node name="MeshLibrary" type="Node3D"]
+
+[node name="Wall" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_2qvvp")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Wall"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Wall/StaticBody3D"]
+shape = SubResource("BoxShape3D_r7oxa")

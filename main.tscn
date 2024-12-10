@@ -1,8 +1,12 @@
-[gd_scene load_steps=27 format=3 uid="uid://c700pjn84lp4f"]
+[gd_scene load_steps=19 format=3 uid="uid://c700pjn84lp4f"]
 
 [ext_resource type="PackedScene" uid="uid://d1p66onp0vo8q" path="res://robot_arm.tscn" id="1_sb113"]
 [ext_resource type="Script" path="res://ball.gd" id="2_0ggc7"]
 [ext_resource type="Script" path="res://label.gd" id="3_kdewb"]
+[ext_resource type="Texture2D" uid="uid://bsypteinxjdx1" path="res://concrete_moss_diff_2k.jpg" id="4_pccp0"]
+[ext_resource type="MeshLibrary" uid="uid://bg21744eiy32c" path="res://meshWall.meshlib" id="5_7kwop"]
+[ext_resource type="PackedScene" uid="uid://b05q6wlfv645a" path="res://goal.tscn" id="6_q2yvl"]
+[ext_resource type="PackedScene" uid="uid://cyltaeccbmsaj" path="res://tree.tscn" id="7_qp8th"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fwl0a"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -25,55 +29,142 @@ bounce = 0.7
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_a7nsb"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_7d2us"]
-size = Vector3(10, 0.1, 1.5)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_wlcgl"]
-size = Vector3(10, 0.1, 1.5)
-
-[sub_resource type="BoxMesh" id="BoxMesh_onude"]
-size = Vector3(1.5, 0.1, 5)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_np4yc"]
-size = Vector3(1.5, 0.1, 5)
-
-[sub_resource type="BoxMesh" id="BoxMesh_l2gww"]
-size = Vector3(9, 0.5, 0.2)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_ndc2b"]
-size = Vector3(9, 0.5, 0.2)
-
-[sub_resource type="BoxMesh" id="BoxMesh_oag4j"]
-size = Vector3(0.2, 0.5, 5)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_70ffl"]
-size = Vector3(0.2, 0.5, 5)
-
-[sub_resource type="BoxMesh" id="BoxMesh_x5iev"]
-size = Vector3(7, 0.1, 1.5)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_rsrp1"]
-size = Vector3(7, 0.1, 1.5)
-
-[sub_resource type="BoxMesh" id="BoxMesh_wgrj3"]
-size = Vector3(7, 0.5, 0.2)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_p38xk"]
-size = Vector3(7, 0.5, 0.2)
-
-[sub_resource type="BoxMesh" id="BoxMesh_2rse0"]
-size = Vector3(1.5, 0.1, 4)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_p1mld"]
-size = Vector3(1.5, 0.1, 4)
-
-[sub_resource type="BoxMesh" id="BoxMesh_vwuqt"]
-size = Vector3(0.2, 0.5, 4.5)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_vvu5h"]
-size = Vector3(0.2, 0.5, 4.5)
-
 [sub_resource type="SystemFont" id="SystemFont_jl1ww"]
+
+[sub_resource type="GDScript" id="GDScript_dt1bh"]
+script/source = "extends Node3D
+
+const WALL_HEIGHT = 3.0
+const WALL_THICKNESS = 0.5
+const SPAWN_POSITION = Vector3(-8, 1, -8)  # Start at top-left
+
+func _ready():
+	create_maze_walls()
+	create_goal_hole()
+
+func create_wall(start: Vector3, end: Vector3) -> CSGBox3D:
+	var wall = CSGBox3D.new()
+	var center = (start + end) / 2
+	var length = start.distance_to(end)
+	
+	wall.position = center
+	wall.size = Vector3(length, WALL_HEIGHT, WALL_THICKNESS)
+	
+	if abs(start.x - end.x) < 0.1:
+		wall.rotation_degrees.y = 90
+	
+	wall.use_collision = true
+	wall.collision_layer = 1
+	wall.collision_mask = 1
+	
+	return wall
+
+func create_maze_walls():
+	var walls = [
+		# Outer walls
+		[Vector3(-10, 0, -10), Vector3(10, 0, -10)],  # North
+		[Vector3(-10, 0, 10), Vector3(10, 0, 10)],    # South
+		[Vector3(-10, 0, -10), Vector3(-10, 0, 10)],  # West
+		[Vector3(10, 0, -10), Vector3(10, 0, 10)],    # East
+		
+		# Horizontal walls matching the image
+		[Vector3(-8, 0, -8), Vector3(-4, 0, -8)],
+		[Vector3(-2, 0, -8), Vector3(2, 0, -8)],
+		[Vector3(4, 0, -8), Vector3(8, 0, -8)],
+		[Vector3(-8, 0, -6), Vector3(-4, 0, -6)],
+		[Vector3(0, 0, -6), Vector3(4, 0, -6)],
+		[Vector3(-8, 0, -4), Vector3(-2, 0, -4)],
+		[Vector3(2, 0, -4), Vector3(6, 0, -4)],
+		[Vector3(-6, 0, -2), Vector3(-2, 0, -2)],
+		[Vector3(0, 0, -2), Vector3(4, 0, -2)],
+		[Vector3(6, 0, -2), Vector3(8, 0, -2)],
+		[Vector3(-8, 0, 0), Vector3(-4, 0, 0)],
+		[Vector3(-2, 0, 0), Vector3(2, 0, 0)],
+		[Vector3(4, 0, 0), Vector3(8, 0, 0)],
+		[Vector3(-6, 0, 2), Vector3(-2, 0, 2)],
+		[Vector3(0, 0, 2), Vector3(6, 0, 2)],
+		[Vector3(-8, 0, 4), Vector3(-4, 0, 4)],
+		[Vector3(-2, 0, 4), Vector3(2, 0, 4)],
+		[Vector3(4, 0, 4), Vector3(8, 0, 4)],
+		[Vector3(-6, 0, 6), Vector3(0, 0, 6)],
+		[Vector3(2, 0, 6), Vector3(6, 0, 6)],
+		[Vector3(-8, 0, 8), Vector3(-2, 0, 8)],
+		[Vector3(0, 0, 8), Vector3(8, 0, 8)],
+		
+		# Vertical walls matching the image
+		[Vector3(-8, 0, -8), Vector3(-8, 0, -4)],
+		[Vector3(-8, 0, -2), Vector3(-8, 0, 2)],
+		[Vector3(-8, 0, 4), Vector3(-8, 0, 8)],
+		[Vector3(-6, 0, -6), Vector3(-6, 0, -2)],
+		[Vector3(-6, 0, 0), Vector3(-6, 0, 4)],
+		[Vector3(-4, 0, -8), Vector3(-4, 0, -4)],
+		[Vector3(-4, 0, -2), Vector3(-4, 0, 2)],
+		[Vector3(-4, 0, 4), Vector3(-4, 0, 8)],
+		[Vector3(-2, 0, -8), Vector3(-2, 0, -4)],
+		[Vector3(-2, 0, -2), Vector3(-2, 0, 2)],
+		[Vector3(-2, 0, 4), Vector3(-2, 0, 8)],
+		[Vector3(0, 0, -6), Vector3(0, 0, -2)],
+		[Vector3(0, 0, 0), Vector3(0, 0, 4)],
+		[Vector3(0, 0, 6), Vector3(0, 0, 8)],
+		[Vector3(2, 0, -8), Vector3(2, 0, -4)],
+		[Vector3(2, 0, -2), Vector3(2, 0, 2)],
+		[Vector3(2, 0, 4), Vector3(2, 0, 8)],
+		[Vector3(4, 0, -6), Vector3(4, 0, -2)],
+		[Vector3(4, 0, 0), Vector3(4, 0, 4)],
+		[Vector3(4, 0, 6), Vector3(4, 0, 8)],
+		[Vector3(6, 0, -4), Vector3(6, 0, 0)],
+		[Vector3(6, 0, 2), Vector3(6, 0, 6)],
+		[Vector3(8, 0, -8), Vector3(8, 0, -2)],
+		[Vector3(8, 0, 0), Vector3(8, 0, 8)]
+	]
+	
+	for wall_points in walls:
+		var wall = create_wall(wall_points[0], wall_points[1])
+		add_child(wall)
+	
+	# Create floor
+	var floor = CSGBox3D.new()
+	floor.size = Vector3(20, 0.5, 20)
+	floor.position = Vector3(0, -0.25, 0)
+	floor.use_collision = true
+	add_child(floor)
+
+func create_goal_hole():
+	var hole_visual = CSGCylinder3D.new()
+	hole_visual.radius = 0.75
+	hole_visual.height = 0.5
+	hole_visual.position = Vector3(-8, -0.25, 8)  # Goal at bottom-left
+	hole_visual.material = StandardMaterial3D.new()
+	hole_visual.material.albedo_color = Color(0, 0, 0)
+	add_child(hole_visual)
+	
+	var hole_area = Area3D.new()
+	var collision_shape = CollisionShape3D.new()
+	var cylinder_shape = CylinderShape3D.new()
+	cylinder_shape.radius = 0.75
+	cylinder_shape.height = 1.0
+	collision_shape.shape = cylinder_shape
+	hole_area.add_child(collision_shape)
+	hole_area.position = Vector3(-8, 0, 8)
+	hole_area.body_entered.connect(_on_ball_in_hole)
+	add_child(hole_area)
+
+func _on_ball_in_hole(body):
+	if body.is_in_group(\"ball\"):
+		print(\"Goal reached! Resetting game...\")
+		await get_tree().create_timer(1.0).timeout
+		body.position = SPAWN_POSITION
+		body.linear_velocity = Vector3.ZERO
+		body.angular_velocity = Vector3.ZERO
+"
+
+[sub_resource type="QuadMesh" id="QuadMesh_0uiem"]
+size = Vector2(30, 30)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xhi3w"]
+albedo_texture = ExtResource("4_pccp0")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ems8c"]
 
 [node name="origin" type="Node3D"]
 
@@ -85,106 +176,26 @@ shadow_enabled = true
 environment = SubResource("Environment_qusxx")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.0681377, -0.436148, 0.897292, 0.0047852, 0.899515, 0.436865, -0.997664, -0.0254732, 0.0633779, 9.98418, 6.48792, -2.6876)
-fov = 51.7354
+transform = Transform3D(-4.37114e-08, -1, -4.37114e-08, 0, -4.37114e-08, 1, -1, 4.37114e-08, 1.91069e-15, 0, 250, 0)
+fov = 70.3125
 
 [node name="arm" parent="." instance=ExtResource("1_sb113")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -2.40325, 0.48236, -6.25749)
+transform = Transform3D(-6.36509, 0, -7.71269, 0, 10, 0, 7.71269, 0, -6.36509, -87.3025, 18.4752, 74.1496)
 
 [node name="Ball" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0284376, 4.10597, -0.16341)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -108.815, 46.5708, 21.4)
 physics_material_override = SubResource("PhysicsMaterial_wbuve")
 linear_damp = 0.1
 angular_damp = 0.05
 script = ExtResource("2_0ggc7")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Ball"]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, -21.7781, 0)
 mesh = SubResource("SphereMesh_x0rr2")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ball"]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, -21.778, 0)
 shape = SubResource("SphereShape3D_a7nsb")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.53067, 0)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
-transform = Transform3D(0.984808, 0.173648, 0, -0.17101, 0.969846, 0.173648, 0.0301537, -0.17101, 0.984808, 0, 5, 0)
-mesh = SubResource("BoxMesh_7d2us")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-transform = Transform3D(0.984808, 0.173648, 0, -0.17101, 0.969846, 0.173648, 0.0301537, -0.17101, 0.984808, 0, 5, 0)
-shape = SubResource("BoxShape3D_wlcgl")
-
-[node name="StaticBody3D2" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.46483, 2.24117, -1.89973)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D2"]
-transform = Transform3D(0.984808, -0.173648, 0, 0.17101, 0.969846, 0.173648, -0.0301537, -0.17101, 0.984808, 0.0354986, 0.0289345, 0.279167)
-mesh = SubResource("BoxMesh_onude")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D2"]
-transform = Transform3D(0.984808, -0.173648, 0, 0.17101, 0.969846, 0.173648, -0.0301537, -0.17101, 0.984808, 0.035, 0.029, 0.279)
-shape = SubResource("BoxShape3D_np4yc")
-
-[node name="StaticBody3D3" type="StaticBody3D" parent="."]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D3"]
-transform = Transform3D(0.984808, 0.173648, 0, -0.17101, 0.969846, 0.173648, 0.0301537, -0.17101, 0.984808, -0.484385, 3.64426, -0.808988)
-mesh = SubResource("BoxMesh_l2gww")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D3"]
-transform = Transform3D(0.984808, 0.173648, 0, -0.17101, 0.969846, 0.173648, 0.0301537, -0.17101, 0.984808, -0.484, 3.644, -0.809)
-shape = SubResource("BoxShape3D_ndc2b")
-
-[node name="StaticBody3D4" type="StaticBody3D" parent="."]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D4"]
-transform = Transform3D(0.984808, -0.173648, 0, 0.17101, 0.969846, 0.173648, -0.0301537, -0.17101, 0.984808, 5.32207, 2.59479, -1.5936)
-mesh = SubResource("BoxMesh_oag4j")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D4"]
-transform = Transform3D(0.984808, -0.173648, 0, 0.17101, 0.969846, 0.173648, -0.0301537, -0.17101, 0.984808, 5.322, 2.595, -1.594)
-shape = SubResource("BoxShape3D_70ffl")
-
-[node name="StaticBody3D5" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0673869, 0)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D5"]
-transform = Transform3D(0.984808, -0.173648, 0, 0.17101, 0.969846, 0.173648, -0.0301537, -0.17101, 0.984808, 0.377999, 1.30704, -3.22154)
-mesh = SubResource("BoxMesh_x5iev")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D5"]
-transform = Transform3D(0.984808, -0.173648, 0, 0.17101, 0.969846, 0.173648, -0.0301537, -0.17101, 0.984808, 0.378, 1.307, -3.222)
-shape = SubResource("BoxShape3D_rsrp1")
-
-[node name="StaticBody3D6" type="StaticBody3D" parent="."]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D6"]
-transform = Transform3D(0.984808, -0.173648, 0, 0.17101, 0.969846, 0.173648, -0.0301537, -0.17101, 0.984808, 1.96015, 1.56599, -3.98467)
-mesh = SubResource("BoxMesh_wgrj3")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D6"]
-transform = Transform3D(0.984808, -0.173648, 0, 0.17101, 0.969846, 0.173648, -0.0301537, -0.17101, 0.984808, 1.96, 1.566, -3.985)
-shape = SubResource("BoxShape3D_p38xk")
-
-[node name="StaticBody3D7" type="StaticBody3D" parent="."]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D7"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.38619, 0.478711, -4.91033)
-mesh = SubResource("BoxMesh_2rse0")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D7"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.386, 0.479, -4.91)
-shape = SubResource("BoxShape3D_p1mld")
-
-[node name="StaticBody3D8" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2577, 0.804546, -4.59488)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D8"]
-mesh = SubResource("BoxMesh_vwuqt")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D8"]
-shape = SubResource("BoxShape3D_vvu5h")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
@@ -198,3 +209,31 @@ offset_right = 200.0
 offset_bottom = 50.0
 theme_override_fonts/font = SubResource("SystemFont_jl1ww")
 script = ExtResource("3_kdewb")
+
+[node name="Maze" type="Node3D" parent="."]
+script = SubResource("GDScript_dt1bh")
+
+[node name="ground" type="MeshInstance3D" parent="Maze"]
+transform = Transform3D(9.82406, 0, 0, 0, -4.29423e-07, 9.82406, 0, -9.82406, -4.29423e-07, 0, 19, 0)
+mesh = SubResource("QuadMesh_0uiem")
+surface_material_override/0 = SubResource("StandardMaterial3D_xhi3w")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Maze/ground"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Maze/ground/StaticBody3D"]
+transform = Transform3D(30, 0, 0, 0, 30, 0, 0, 0, 0.5, 0, 0, 0)
+shape = SubResource("BoxShape3D_ems8c")
+
+[node name="GridMap" type="GridMap" parent="Maze"]
+mesh_library = ExtResource("5_7kwop")
+cell_size = Vector3(10, 20, 10)
+data = {
+"cells": PackedInt32Array(131058, 65522, 0, 131059, 65522, 0, 131060, 65522, 0, 131061, 65522, 0, 131062, 65522, 0, 131063, 65522, 0, 131064, 65522, 0, 131065, 65522, 0, 131066, 65522, 0, 131067, 65522, 0, 131068, 65522, 0, 131069, 65522, 0, 131070, 65522, 0, 131071, 65522, 0, 65536, 65522, 0, 65537, 65522, 0, 65538, 65522, 0, 65539, 65522, 0, 65540, 65522, 0, 65541, 65522, 0, 65542, 65522, 0, 65543, 65522, 0, 65546, 65522, 0, 65545, 65522, 0, 65544, 65522, 0, 65547, 65522, 0, 65548, 65522, 0, 65549, 65522, 0, 65549, 65523, 0, 65549, 65524, 0, 65549, 65525, 0, 65549, 65526, 0, 65549, 65527, 0, 65549, 65528, 0, 65549, 65529, 0, 65549, 65530, 0, 65549, 65531, 0, 65549, 65533, 0, 65549, 65532, 0, 65549, 65534, 0, 65549, 65535, 0, 65549, 0, 0, 65549, 1, 0, 65549, 2, 0, 65549, 3, 0, 65549, 4, 0, 65549, 5, 0, 65549, 6, 0, 65549, 7, 0, 65549, 8, 0, 65549, 9, 0, 65549, 10, 0, 65549, 11, 0, 65549, 12, 0, 65549, 13, 0, 131058, 13, 0, 131059, 13, 0, 131060, 13, 0, 131061, 13, 0, 131062, 13, 0, 131063, 13, 0, 131064, 13, 0, 131065, 13, 0, 131066, 13, 0, 131067, 13, 0, 131068, 13, 0, 131069, 13, 0, 131070, 13, 0, 131071, 13, 0, 65536, 13, 0, 65537, 13, 0, 65538, 13, 0, 65539, 13, 0, 65540, 13, 0, 65541, 13, 0, 65542, 13, 0, 65543, 13, 0, 65544, 13, 0, 65545, 13, 0, 65546, 13, 0, 65547, 13, 0, 65548, 13, 0, 131058, 65523, 0, 131058, 65524, 0, 131058, 65525, 0, 131058, 65526, 0, 131058, 65527, 0, 131058, 65528, 0, 131058, 65529, 0, 131058, 65530, 0, 131058, 65531, 0, 131058, 65532, 0, 131058, 65533, 0, 131058, 65534, 0, 131058, 65535, 0, 131058, 0, 0, 131058, 1, 0, 131058, 2, 0, 131058, 3, 0, 131058, 4, 0, 131058, 5, 0, 131058, 6, 0, 131058, 7, 0, 131058, 8, 0, 131058, 9, 0, 131058, 10, 0, 131058, 11, 0, 131058, 12, 0, 131061, 0, 0, 131061, 65535, 0, 131061, 65534, 0, 131061, 65533, 0, 131061, 65532, 0, 131061, 65531, 0, 131061, 65530, 0, 131061, 65529, 0, 131061, 65528, 0, 131061, 65527, 0, 131061, 65526, 0, 131061, 65525, 0, 131062, 65525, 0, 131063, 65525, 0, 131064, 65525, 0, 131065, 65525, 0, 131066, 65525, 0, 131067, 65525, 0, 131068, 65525, 0, 131069, 65525, 0, 131070, 65525, 0, 131071, 65525, 0, 65536, 65525, 0, 65537, 65525, 0, 65538, 65525, 0, 65539, 65525, 0, 65540, 65525, 0, 65541, 65525, 0, 65542, 65525, 0, 65543, 65525, 0, 65544, 65525, 0, 65545, 65525, 0, 65546, 65525, 0, 65547, 65525, 0, 65548, 65525, 0, 131061, 3, 0, 131061, 4, 0, 131061, 5, 0, 131061, 6, 0, 131061, 7, 0, 131061, 8, 0, 131061, 9, 0, 131062, 9, 0, 131063, 9, 0, 131064, 9, 0, 131065, 9, 0, 131066, 9, 0, 131062, 0, 0, 131063, 0, 0, 131064, 0, 0, 131064, 65535, 0, 131064, 65534, 0, 131064, 65533, 0, 131064, 65532, 0, 131064, 65531, 0, 131064, 65530, 0, 131064, 65529, 0, 131064, 65528, 0, 131065, 65528, 0, 131066, 65528, 0, 131067, 65528, 0, 131068, 65528, 0, 131069, 65528, 0, 131070, 65528, 0, 131070, 65529, 0, 131070, 65530, 0, 131070, 65531, 0, 131070, 65532, 0, 131067, 65532, 0, 131067, 65533, 0, 131067, 65534, 0, 131067, 65535, 0, 131067, 0, 0, 131067, 1, 0, 131067, 2, 0, 131067, 3, 0, 131067, 4, 0, 131068, 65535, 0, 131069, 65535, 0, 131070, 65535, 0, 131071, 65535, 0, 65536, 65535, 0, 65536, 65534, 0, 65536, 65533, 0, 65536, 65532, 0, 65536, 65531, 0, 65536, 65530, 0, 65536, 65529, 0, 65536, 65528, 0, 65536, 65527, 0, 65536, 65526, 0, 131066, 4, 0, 131066, 5, 0, 131066, 6, 0, 131067, 6, 0, 131068, 6, 0, 131069, 6, 0, 131069, 7, 0, 131069, 8, 0, 131069, 9, 0, 131069, 10, 0, 131070, 10, 0, 131071, 10, 0, 65536, 10, 0, 65536, 9, 0, 65536, 8, 0, 65536, 7, 0, 65536, 6, 0, 65536, 5, 0, 65536, 4, 0, 65536, 3, 0, 65536, 2, 0, 131071, 2, 0, 131071, 3, 0, 131070, 3, 0, 65537, 2, 0, 65538, 2, 0, 65539, 2, 0, 65539, 5, 0, 65539, 6, 0, 65539, 7, 0, 65539, 8, 0, 65539, 9, 0, 65539, 10, 0, 65540, 5, 0, 65541, 5, 0, 65542, 5, 0, 65543, 5, 0, 65544, 5, 0, 65545, 5, 0, 65546, 5, 0, 65546, 4, 0, 65546, 3, 0, 65546, 2, 0, 65546, 1, 0, 65546, 0, 0, 65546, 65535, 0, 65546, 65534, 0, 65546, 65533, 0, 65545, 65533, 0, 65544, 65533, 0, 65543, 65533, 0, 65542, 65533, 0, 65542, 65534, 0, 65541, 65534, 0, 65540, 2, 0, 65542, 2, 0, 65541, 2, 0, 65543, 2, 0, 65543, 1, 0, 65540, 65534, 0, 65538, 65534, 0, 65539, 65534, 0, 65537, 65534, 0, 65542, 10, 0, 65542, 9, 0, 65542, 8, 0, 65543, 8, 0, 65544, 8, 0, 65545, 8, 0, 65546, 8, 0, 65547, 8, 0, 65548, 8, 0, 65546, 65530, 0, 65545, 65530, 0, 65544, 65530, 0, 65543, 65530, 0, 65542, 65530, 0, 65541, 65530, 0, 65540, 65530, 0, 65540, 65531, 0, 65539, 65531, 0, 65537, 65531, 0, 65538, 65531, 0, 65546, 65529, 0, 65546, 65528, 0, 65540, 65528, 0, 65540, 65529, 0, 131070, 2, 0)
+}
+metadata/_editor_floor_ = Vector3(1, 1, 0)
+
+[node name="goal" parent="Maze" instance=ExtResource("6_q2yvl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.3407, 26.0702, -66.5399)
+
+[node name="Tree" parent="." instance=ExtResource("7_qp8th")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 115.238, 0.587708, -36.2556)

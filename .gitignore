@@ -1,0 +1,17 @@
+# Godot-specific
+.godot/shader_cache/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Logs and caches
+*.log
+*.tmp
+*.bak
+*.cache
+
+# Editor files
+*.swp
+*.swo
+*.swn

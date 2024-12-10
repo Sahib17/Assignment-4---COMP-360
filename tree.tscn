@@ -1,0 +1,24 @@
+[gd_scene load_steps=6 format=3 uid="uid://cyltaeccbmsaj"]
+
+[ext_resource type="ArrayMesh" uid="uid://bsj11yl86lmgn" path="res://Dorchester3D.com_jacaranda_tree_1k.obj" id="1_gudql"]
+
+[sub_resource type="Skin" id="Skin_lm82a"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rr8yl"]
+albedo_color = Color(0.11099, 0.0800666, 0.015535, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qrtld"]
+albedo_color = Color(0.378329, 0.285006, 0.148772, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ifch5"]
+albedo_color = Color(0.306547, 0.56671, 0.407359, 1)
+
+[node name="Tree" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(5, 0, 0, 0, 0.425085, 4.9819, 0, -4.9819, 0.425085, 0, 18.8245, 151.324)
+mesh = ExtResource("1_gudql")
+skin = SubResource("Skin_lm82a")
+surface_material_override/0 = SubResource("StandardMaterial3D_rr8yl")
+surface_material_override/1 = SubResource("StandardMaterial3D_qrtld")
+surface_material_override/2 = SubResource("StandardMaterial3D_ifch5")
