@@ -1,38 +1,35 @@
 extends Node3D
 
-@export var claw_area: Area3D
-@export var ball: Node3D
-var patrol_position = Vector3(4, 0, 4)  # Strategic position in the solution path
-var patrol_range = 3.0
-var patrol_speed = 1.5  # Slightly faster for more challenge
-var time = 0.0
+@onready var ball = $"../../../Ball" # Modern GDScript syntax for onready
+var distance_threshold: float = 2.0  # Exposed as variable for easier tweaking
 
-func _ready():
-	global_position = patrol_position
-	claw_area.body_entered.connect(_on_claw_pickup)
+func _ready() -> void:
+	if not ball:
+		push_error("Ball node not found. Please check the node path: ../../../Ball")
+		return
+		
+	print("Ball teleporter initialized. Will use ball's internal spawn position.")
 
-func _process(delta):
-	time += delta
-	
-	# Patrol movement
-	var offset = sin(time * patrol_speed) * patrol_range
-	global_position.x = patrol_position.x + offset
-	global_position.z = patrol_position.z + cos(time * patrol_speed) * patrol_range
-	
-	# Add rotation for extra challenge
-	rotation_degrees.y = sin(time * 0.8) * 90
+func _process(_delta: float) -> void:
+	if not ball:
+		return
+		
+	if is_ball_near():
+		reset_ball()
 
-func _on_claw_pickup(body):
-	if body == ball:
-		ball.get_parent().remove_child(ball)
-		add_child(ball)
-		ball.position = Vector3(0, 1, 0)
-		await get_tree().create_timer(1.0).timeout
-		drop_ball()
+func is_ball_near() -> bool:
+	if not ball:
+		return false
+		
+	var distance = global_transform.origin.distance_to(ball.global_transform.origin)
+	return distance < distance_threshold
 
-func drop_ball():
-	if ball.get_parent() == self:
-		remove_child(ball)
-		get_parent().add_child(ball)
-		ball.global_position = global_position + Vector3(0, -1, 2)
-		ball.position.y = 1  # Ensure ball drops from a height
+func reset_ball() -> void:
+	if not ball:
+		return
+		
+	# Call the ball's own reset function instead of trying to manage it ourselves
+	if ball.has_method("reset_ball"):
+		ball.reset_ball()
+	else:
+		push_error("Ball node does not have a reset_ball method!")

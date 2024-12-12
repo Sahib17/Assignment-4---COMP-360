@@ -6,11 +6,12 @@ signal ball_destroyed(count: int)
 var destroyed_count = 0
 var spawn_position = Vector3(-108.8, 46.571, 21.4)
 var is_resetting = false
+var controls_locked = false
 
 # Movement variables
 var move_speed = 10.0  # Horizontal movement speed
-var jump_force = 5.0  # Vertical jump force
-var can_jump = true   # To prevent double jumping
+var jump_force = 5.0   # Vertical jump force
+var can_jump = true    # To prevent double jumping
 
 func _ready():
 	add_to_group("ball")
@@ -20,13 +21,24 @@ func _ready():
 	notifier.screen_exited.connect(_on_screen_exited)
 	print("Ball initialized at path: " + str(get_path()))
 	position = spawn_position
-
+	
 	# Set physics interpolation mode for smoother movement
 	physics_material_override = PhysicsMaterial.new()
 	physics_material_override.friction = 1.0
 	physics_material_override.bounce = 0.2
+	
+	# Connect to wall's signal
+	var wall = get_node("/root/origin/Node3D/StaticBody3D")
+	if wall:
+		wall.lock_controls.connect(_on_lock_controls)
+		print("Connected to wall signals")
+	else:
+		print("Could not find wall node")
 
 func _physics_process(_delta):
+	if controls_locked:
+		return
+		
 	# Original reset check
 	if position.y < -30 and !is_resetting:
 		reset_ball()
@@ -56,7 +68,6 @@ func _physics_process(_delta):
 		can_jump = false
 		await get_tree().create_timer(1.0).timeout  # Prevent jumping for 1 second
 		can_jump = true
-	# === MOVEMENT CONTROLS END ===
 
 func _on_screen_exited():
 	if !is_resetting:
@@ -78,3 +89,10 @@ func reset_ball():
 	
 	await get_tree().create_timer(0.1).timeout
 	is_resetting = false
+
+func _on_lock_controls(locked: bool):
+	controls_locked = locked
+	print("Controls " + ("locked" if locked else "unlocked"))
+	if locked:
+		linear_velocity = Vector3.ZERO
+		angular_velocity = Vector3.ZERO
