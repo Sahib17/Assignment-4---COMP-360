@@ -251,7 +251,7 @@ data = {
 metadata/_editor_floor_ = Vector3(1, 1, 0)
 
 [node name="goal" parent="Maze" instance=ExtResource("6_q2yvl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.3407, 26.0702, -66.5399)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.0342, 26.0711, -65.9821)
 script = ExtResource("8_gwqy5")
 
 [node name="Tree" parent="." instance=ExtResource("7_qp8th")]

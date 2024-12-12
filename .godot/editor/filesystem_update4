@@ -1,7 +1,3 @@
 res://mesh_libraryscene.tscn
 res://main.tscn
-res://invisiblewall.gd
-res://invisiblewallfour.gd
-res://invisiblewallthree.gd
-res://invisiblewalltwo.gd
-res://ball.gd
+res://game_over_popup.tscn

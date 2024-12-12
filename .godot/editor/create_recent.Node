@@ -1,11 +1,12 @@
+ColorRect
+Label
+Control
 CollisionShape3D
 StaticBody3D
 Node3D
 Area3D
 GridMap
 MeshInstance3D
-Label
-Control
 CanvasLayer
 RigidBody3D
 AnimationPlayer
