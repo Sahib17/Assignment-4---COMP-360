@@ -1,6 +1,14 @@
 # Ball Escape
 Ball escape is a game where you have to escape a maze and go to the blue portal to escape. you also have to avoid the robot claws or else they will throw you back to the initial position.
 
+![image](https://github.com/user-attachments/assets/fd05eb28-2588-4ed9-863b-e25d80fa9097)
+
+
+**Winning Scene**
+
+![FinalGame-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/f4043673-ce48-4a5b-bb19-af65a176ca39)
+
+
 # How to run?
 To run the game simply run the `Game.exe` file and the game will start. To control the ball movement use the up, down, left and right arrow keys, to jump use the space bar.
 
@@ -11,6 +19,7 @@ To run the game simply run the `Game.exe` file and the game will start. To contr
 The initial setup for the claw was implemented through a ramp, the ball falling down and the robot arm catching it.
 
 ![RobotArmPhase1-ezgif com-animated-gif-maker](https://github.com/user-attachments/assets/e332f17a-cfb8-4f72-b21d-03bf5a48b4dd)
+
 
 **Key Variables**
 
