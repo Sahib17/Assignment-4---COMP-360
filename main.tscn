@@ -1,19 +1,18 @@
-[gd_scene load_steps=28 format=3 uid="uid://c700pjn84lp4f"]
+[gd_scene load_steps=30 format=3 uid="uid://c700pjn84lp4f"]
 
 [ext_resource type="PackedScene" uid="uid://d1p66onp0vo8q" path="res://robot_arm.tscn" id="1_sb113"]
 [ext_resource type="Script" path="res://ball.gd" id="2_0ggc7"]
-[ext_resource type="Script" path="res://robot_arm2.gd" id="2_8c8up"]
+[ext_resource type="Script" path="res://robot_arm_controller.gd" id="2_75n2q"]
 [ext_resource type="Script" path="res://label.gd" id="3_kdewb"]
+[ext_resource type="Texture2D" uid="uid://bdeidtnpedy6r" path="res://football_diff_4k.jpg" id="4_11u47"]
 [ext_resource type="Texture2D" uid="uid://bsypteinxjdx1" path="res://concrete_moss_diff_2k.jpg" id="4_pccp0"]
 [ext_resource type="MeshLibrary" uid="uid://bg21744eiy32c" path="res://meshWall.meshlib" id="5_7kwop"]
 [ext_resource type="PackedScene" uid="uid://b05q6wlfv645a" path="res://goal.tscn" id="6_q2yvl"]
 [ext_resource type="PackedScene" uid="uid://cyltaeccbmsaj" path="res://tree.tscn" id="7_qp8th"]
 [ext_resource type="Script" path="res://goal.gd" id="8_gwqy5"]
 [ext_resource type="Script" path="res://tree.gd" id="9_j4h47"]
-[ext_resource type="Script" path="res://robot_arm.gd" id="10_xirj6"]
 [ext_resource type="Script" path="res://invisiblewall.gd" id="11_rbtfy"]
 [ext_resource type="Script" path="res://invisiblewalltwo.gd" id="12_xaiyj"]
-[ext_resource type="Script" path="res://invisiblewallthree.gd" id="13_sekyc"]
 [ext_resource type="Script" path="res://invisiblewallfour.gd" id="14_835sy"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fwl0a"]
@@ -34,6 +33,9 @@ friction = 0.5
 bounce = 0.7
 
 [sub_resource type="SphereMesh" id="SphereMesh_x0rr2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_22tsn"]
+albedo_texture = ExtResource("4_11u47")
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_a7nsb"]
 
@@ -166,15 +168,23 @@ func _on_ball_in_hole(body):
 		body.angular_velocity = Vector3.ZERO
 "
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sod7e"]
+albedo_texture = ExtResource("4_pccp0")
+
 [sub_resource type="QuadMesh" id="QuadMesh_0uiem"]
 size = Vector2(30, 30)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xhi3w"]
-albedo_texture = ExtResource("4_pccp0")
+albedo_texture = ExtResource("4_11u47")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ems8c"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_vt64m"]
+size = Vector3(1, 1.49719, 1)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1ssnk"]
+radius = 4.238
+height = 46.86
 
 [node name="origin" type="Node3D"]
 
@@ -190,15 +200,32 @@ transform = Transform3D(-4.37114e-08, -1, -4.37114e-08, 0, -4.37114e-08, 1, -1, 
 fov = 70.3125
 
 [node name="arm" parent="." instance=ExtResource("1_sb113")]
-transform = Transform3D(3.49684, 0, -9.36868, 0, 10, 0, 9.36868, 0, 3.49684, -87.3025, 18.4752, 74.1496)
+transform = Transform3D(5.59494, 0, -14.9899, 0, 16, 0, 14.9899, 0, 5.59494, -87.3025, 18.4752, 74.1496)
+script = ExtResource("2_75n2q")
+throw_force = Vector3(0, 10, -40)
+grab_height = 2.0
+detection_size = Vector3(2, 2, 2)
 
 [node name="Area3D" type="Area3D" parent="arm"]
 
 [node name="arm2" parent="." instance=ExtResource("1_sb113")]
-transform = Transform3D(9.96041, 0, 0.888942, 0, 10, 0, -0.888942, 0, 9.96041, -10.8062, 28.1982, 90.4224)
-script = ExtResource("2_8c8up")
+transform = Transform3D(-4.81212, 0.31321, -15.256, -0.0301588, 15.9964, 0.337923, 15.2592, 0.13039, -4.81045, 16.4456, 18.2743, -5.67365)
+script = ExtResource("2_75n2q")
+throw_force = Vector3(0, 10, -40)
+grab_height = 2.0
+detection_size = Vector3(2, 2, 2)
 
 [node name="Area3D" type="Area3D" parent="arm2"]
+
+[node name="arm" parent="arm2/Area3D" instance=ExtResource("1_sb113")]
+transform = Transform3D(5.59494, 0, -14.9899, 0, 16, 0, 14.9899, 0, 5.59494, -87.3025, 18.4752, 74.1496)
+visible = false
+script = ExtResource("2_75n2q")
+throw_force = Vector3(0, 10, -40)
+grab_height = 2.0
+detection_size = Vector3(2, 2, 2)
+
+[node name="Area3D" type="Area3D" parent="arm2/Area3D/arm"]
 
 [node name="Ball" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -108.815, 46.5708, 21.4)
@@ -210,6 +237,7 @@ script = ExtResource("2_0ggc7")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Ball"]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, -21.7781, 0)
 mesh = SubResource("SphereMesh_x0rr2")
+surface_material_override/0 = SubResource("StandardMaterial3D_22tsn")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ball"]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, -21.778, 0)
@@ -232,7 +260,8 @@ script = ExtResource("3_kdewb")
 script = SubResource("GDScript_dt1bh")
 
 [node name="ground" type="MeshInstance3D" parent="Maze"]
-transform = Transform3D(9.82406, 0, 0, 0, -4.29423e-07, 9.82406, 0, -9.82406, -4.29423e-07, 0, 19, 0)
+transform = Transform3D(9.82406, 0, 0, 0, -4.29423e-07, 9.82406, 0, -9.82406, -4.29423e-07, 5.12733, 19.7854, 4.78722)
+material_override = SubResource("StandardMaterial3D_sod7e")
 mesh = SubResource("QuadMesh_0uiem")
 surface_material_override/0 = SubResource("StandardMaterial3D_xhi3w")
 
@@ -259,8 +288,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 115.238, 0.587708, -36.2556)
 script = ExtResource("9_j4h47")
 
 [node name="arm3" parent="." instance=ExtResource("1_sb113")]
-transform = Transform3D(10, 0, 1.74846e-06, 0, 10, 0, -1.74846e-06, 0, 10, -87.3025, 18.4752, -13.5088)
-script = ExtResource("10_xirj6")
+transform = Transform3D(16, 0, 2.79754e-06, 0, 16, 0, -2.79754e-06, 0, 16, -87.3025, -5.53502, -13.5088)
+script = ExtResource("2_75n2q")
+throw_force = Vector3(0, 10, -40)
+grab_height = 2.0
+detection_size = Vector3(2, 2, 2)
 
 [node name="Area3D" type="Area3D" parent="arm3"]
 
@@ -284,16 +316,6 @@ script = ExtResource("12_xaiyj")
 transform = Transform3D(16, 0, 0, 0, 10, 0, 0, 0, 0.5, -90.1936, -6.37215, -20.9668)
 shape = SubResource("BoxShape3D_vt64m")
 
-[node name="Node3D3" type="Node3D" parent="."]
-transform = Transform3D(0.0276251, 0, -0.999618, 0, 1, 0, 0.999618, 0, 0.0276251, -100.55, 33.1842, 168.45)
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Node3D3"]
-script = ExtResource("13_sekyc")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D3/StaticBody3D"]
-transform = Transform3D(16, 0, 0, 0, 10, 0, 0, 0, 0.5, -90.1936, -6.37215, -20.9668)
-shape = SubResource("BoxShape3D_vt64m")
-
 [node name="Node3D4" type="Node3D" parent="."]
 transform = Transform3D(0.999787, 0, -0.0206283, 0, 1, 0, 0.0206283, 0, 0.999787, 78.9763, 42.7837, 110.338)
 
@@ -302,5 +324,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.999786, -5, -0.0206299)
 script = ExtResource("14_835sy")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D4/StaticBody3D"]
-transform = Transform3D(16, 0, 0, 0, 10, 0, 0, 0, 0.5, -90.1936, -6.37215, -20.9668)
+transform = Transform3D(16, 0, 0, 0, 10, 0, 0, 0, 0.5, -62.158, -3.88619, -118.835)
 shape = SubResource("BoxShape3D_vt64m")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 115.23, 31.8198, 114.593)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("CapsuleShape3D_1ssnk")

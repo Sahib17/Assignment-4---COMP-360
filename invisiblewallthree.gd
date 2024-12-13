@@ -1,11 +1,12 @@
 extends StaticBody3D
 
 @onready var ball = $"/root/origin/Ball"
+@onready var arm = $"/root/origin/Node3D/arm"  # Adjust path if needed
 var is_resetting = false
 var teleport_position = Vector3(-108.8, 46.571, 21.4)
 var contact_position = Vector3.ZERO
 
-signal lock_controls(locked: bool)  # Add the signal definition here
+signal lock_controls(locked: bool)
 
 func _ready():
 	print("Invisible wall initialized")
@@ -24,7 +25,7 @@ func _on_body_entered(body: Node3D):
 		contact_position = ball.global_position
 		# Freeze the ball immediately
 		ball.freeze = true
-		emit_signal("lock_controls", true)  # Lock controls
+		emit_signal("lock_controls", true)
 		
 		# Start countdown but keep ball in place
 		var time_left = 3.0
@@ -41,5 +42,5 @@ func _on_body_entered(body: Node3D):
 		print("Teleporting now!")
 		ball.global_position = teleport_position
 		ball.freeze = false
-		emit_signal("lock_controls", false)  # Unlock controls
+		emit_signal("lock_controls", false)
 		is_resetting = false
