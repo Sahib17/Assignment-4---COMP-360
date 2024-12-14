@@ -41,6 +41,96 @@ The robot claw in the game is responsible for grabbing and throwing the ball. Th
 
 ![RobotArmPhase1-ezgif com-animated-gif-maker](https://github.com/user-attachments/assets/e332f17a-cfb8-4f72-b21d-03bf5a48b4dd)
 
+
+# Ball Controller
+
+The ball controller handles player movement, physics interactions, and reset functionality for the game's main playable object.
+
+## Components
+
+- **RigidBody3D**: The main physics body for the ball
+  
+- **MeshInstance3D**: Visual representation of the ball
+  
+- **CollisionShape3D**: Physical collision shape for physics interactions
+
+## Key Variables
+
+`var destroyed_count = 0`: Tracks how many times the ball has been destroyed/reset
+
+`var spawn_position = Vector3(-108.8, 46.571, 21.4)`: Initial spawn position
+
+`var move_speed = 30.0`: Horizontal movement speed
+
+`var jump_force = 5.0`: Vertical jump force
+
+`var can_jump = true`: Controls jump availability
+
+`var is_resetting = false`: Prevents multiple simultaneous resets
+
+`var controls_locked = false`: Disables controls when true  
+
+## Physics Properties
+
+- **Friction**: 1.0
+  
+- **Bounce**: 0.2
+
+## Key Functions
+
+`_ready()`: 
+
+- Initializes the ball
+  
+- Sets up screen exit detection
+  
+- Connects to wall signals
+  
+- Configures physics properties
+
+`_physics_process()`:
+
+- Handles movement input
+  
+- Applies forces for horizontal movement
+  
+- Controls jumping mechanics
+  
+- Checks for out-of-bounds reset
+
+`reset_ball()`:
+
+- Returns ball to spawn position
+  
+- Resets rotation and velocity
+  
+- Increments destroy counter
+  
+- Updates UI display
+
+## Controls
+
+- **Arrow Keys**: Horizontal movement
+  
+- **Spacebar**: Jump (with 1-second cooldown)
+
+## Special Features
+
+- Screen exit detection
+  
+- Automatic reset when falling below y=-30
+  
+- UI counter for ball resets
+  
+- Controls can be locked by wall signals
+
+## Dependencies
+
+- Requires a Label node for displaying reset count
+  
+- Connects to wall node for control locking functionality
+
+
 # Contributions
 
 ## Samardeep Singh Sidhu
