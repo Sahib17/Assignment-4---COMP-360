@@ -9,7 +9,7 @@ var is_resetting = false
 var controls_locked = false
 
 # Movement variables
-var move_speed = 10.0  # Horizontal movement speed
+var move_speed = 30.0  # Horizontal movement speed
 var jump_force = 5.0   # Vertical jump force
 var can_jump = true    # To prevent double jumping
 
