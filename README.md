@@ -60,3 +60,45 @@ Handles the logic for grabbing the ball, including disabling its physics, repare
 ```throw_ball()```
 
 Throws the ball by re-enabling physics, applying an impulse, and reparenting it to the main scene.
+
+# Contributions
+
+## Samardeep Singh Sidhu
+
+Worked on Invisible wall and its placement `Node 3D` and `Collision space 3D`.
+
+Copied Claw from the initial file to the main file.
+
+Worked in collaboration with Sahib on ball teleportation and ball placement.
+
+## Sahibjeet Singh
+
+## Paramvir Singh Thind
+
+## Shreyas Dutt
+
+## Shefreen Kaur
+
+## Manpreet Singh
+
+Created and implemented Claw functionality.
+
+Added `Collision 3D` and `Area 3D` on the claw to make it collide.
+
+Added proximity area for Claw so that the animations play accordingly.
+
+Created `Game.exe`
+
+# Other Members
+
+## Milo
+
+![image](https://github.com/user-attachments/assets/45b54cf9-9b3d-44fb-9204-c2f3f9ffff77)
+
+Provided Emotional Support and Technical Support throughout the project!
+
+## Bruno
+
+![WhatsApp Image 2024-12-13 at 22 57 22_e91f6eac](https://github.com/user-attachments/assets/88711644-88ad-419d-9d51-4335250fa77a)
+
+Teamlead and provided financial support
