@@ -1,7 +1,5 @@
 # Ball Escape
-Ball escape is a game where you have to escape a maze and go to the blue portal to escape. you also have to avoid the robot claws or else they will throw you back to the initial position.
-
-![image](https://github.com/user-attachments/assets/fd05eb28-2588-4ed9-863b-e25d80fa9097)
+Ball Escape is an exciting maze game where your goal is to escape through a blue portal while avoiding robot claws. These claws will throw you back to your starting position if they catch you, adding a layer of challenge to your escape!
 
 
 **Winning Scene**
@@ -10,107 +8,93 @@ Ball escape is a game where you have to escape a maze and go to the blue portal 
 
 
 # How to run?
-To run the game simply run the `Game.exe` file and the game will start. To control the ball movement use the up, down, left and right arrow keys, to jump use the space bar.
+1. Download and extract the game files.
+2. Run the Game.exe file to start the game.
+3. Control the ball using the arrow keys: Up, Down, Left, Right.
+4. Press the Space bar to make the ball jump.
 
 # Claw movement
 
-1. **Initial Setup**
-
-The initial setup for the claw was implemented through a ramp, the ball falling down and the robot arm catching it.
-
-![RobotArmPhase1-ezgif com-animated-gif-maker](https://github.com/user-attachments/assets/e332f17a-cfb8-4f72-b21d-03bf5a48b4dd)
-
+The robot claw in the game is responsible for grabbing and throwing the ball. The claw's movement was initially set up with a ramp, where the ball falls down and is caught by the robot arm.
 
 **Key Variables**
 
-`@export var ball: RigidBody3D`
+`@export var ball:` RigidBody3D: The ball object to be detected, grabbed, and thrown.
 
-The ball to be detected, grabbed, and thrown.
+`var has_ball = false:` Tracks whether the claw currently has the ball.
 
-`var has_ball = false`
+`@onready var animation_player = $AnimationPlayer:` Reference to the AnimationPlayer node for controlling animations.
 
-Tracks whether the claw currently has the ball.
-
-`@onready var animation_player = $AnimationPlayer`
-
-Reference to the AnimationPlayer node for playing animations.
-
-`var is_ball_nearby = false`
-
-Tracks whether the ball is in proximity.
+`var is_ball_nearby = false:` Tracks if the ball is nearby.
 
 **Functions**
 
-```_ready()```
+`_ready():` Sets up the detection area and connects signals for ball detection.
 
-Sets up the detection area, collision shape, and connects signals for detecting the ball's presence.
+`_on_ball_entered(body):` Triggered when the ball enters the detection area. If the object is the ball, the claw grabs it.
 
-```_on_ball_entered(body)```
+`_on_ball_exited(body):` Triggered when the ball leaves the detection area. Resets the state and returns to the idle animation.
 
-Triggered when a RigidBody3D enters the detection area. If it's the ball, plays the grab animation and attempts to grab it.
+`grab_ball():` Grabs the ball, disables physics, repositions it under the claw, and reparents it.
 
-```_on_ball_exited(body)```
+`throw_ball():` Throws the ball by re-enabling physics, applying an impulse, and reparenting it back to the main scene.
 
-Triggered when the ball leaves the detection area. Resets the is_ball_nearby flag and reverts to the idle animation.
-
-```grab_ball()```
-
-Handles the logic for grabbing the ball, including disabling its physics, reparenting it to the claw, and positioning it correctly.
-
-```throw_ball()```
-
-Throws the ball by re-enabling physics, applying an impulse, and reparenting it to the main scene.
+![RobotArmPhase1-ezgif com-animated-gif-maker](https://github.com/user-attachments/assets/e332f17a-cfb8-4f72-b21d-03bf5a48b4dd)
 
 # Contributions
 
 ## Samardeep Singh Sidhu
 
-Worked on Invisible wall and its placement `Node 3D` and `Collision space 3D`, Updated ball code (added teleportation in collaboration with Sahib).
+Developed the invisible wall and collision space (`Node 3D`, `Collision Space 3D`).
 
-Copied and pasted claw from the initial file (Manpreet's claw) to the main file.
+Updated ball code to include teleportation (in collaboration with Sahib).
 
-Revolved Ramp but wasn't Implemented because it didn't align with the project
+Integrated the claw from the initial project file (Manpreet's claw) into the main game file.
+
+Designed the revolving ramp, although it was not implemented due to alignment issues with the project.
 
 ![Ramp-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/d3a4b026-9d88-4124-8793-ef1f7cf63673)
 
 
 ## Sahibjeet Singh
 
-Created and implemented the ball and all the functionality of the ball (along with physics).
+Created and implemented the ball and its associated physics.
 
-Worked with Samardeep on the teleportation of the ball.
+Collaborated with Samardeep on the ball's teleportation functionality.
 
-Added ball destroyed counter.
+Added a ball destruction counter.
 
 ## Paramvir Singh Thind
 
 Worked on ball and maze wall textures.
 
-Worked with Shefreen to make the maze.
+Collaborated with Shefreen on creating the maze.
 
 ## Shreyas Dutt
 
-Added custom font on the ball-destroyed counter.
+Added a custom font to the ball-destroyed counter.
 
-Added "Ball-destroyed" overlay.
+Implemented the "Ball-destroyed" overlay.
 
-Helped with textures.
+Assisted with texture work.
+
+Deployed the `Game.exe` on itch.io, [Comp 360 Final Project](https://shreyasdutt.itch.io/comp-360-final-project)
 
 ## Shefreen Kaur
 
-Worked and created the maze.
+Designed and created the maze layout.
 
-Added tree and applied collision on the tree.
+Added a tree object and applied collision to it.
 
 ## Manpreet Singh
 
-Created and implemented Claw functionality.
+Created and implemented the claw functionality.
 
-Added `Collision 3D` and `Area 3D` on the claw to make it collide.
+Added `Collision 3D` and `Area 3D` to the claw for collision detection.
 
-Added proximity area for Claw so that the animations play accordingly.
+Implemented proximity detection for the claw to trigger animations.
 
-Created `Game.exe`
+Created the `Game.exe` executable.
 
 # Other Members
 
