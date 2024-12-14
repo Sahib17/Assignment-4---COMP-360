@@ -65,15 +65,9 @@ Throws the ball by re-enabling physics, applying an impulse, and reparenting it 
 
 ## Samardeep Singh Sidhu
 
-Worked on Invisible wall and its placement `Node 3D` and `Collision space 3D`.
+Worked on Invisible wall and its placement `Node 3D` and `Collision space 3D`, Updated ball code (added teleportation in collaboration with Sahib).
 
-Copied and pasted claw from the initial file to the main file.
-
-Worked in collaboration with Sahib on ball teleportation.
-
-Updated ball code and made it not workable. when asked to fix the errors, he refused.
-
-Teleported ball once it goes in goal.
+Copied and pasted claw from the initial file (Manpreet's claw) to the main file.
 
 Revolved Ramp but wasn't Implemented because it didn't align with the project
 
@@ -82,15 +76,31 @@ Revolved Ramp but wasn't Implemented because it didn't align with the project
 
 ## Sahibjeet Singh
 
-Created and implemented Ball and all the functionality of ball.
+Created and implemented the ball and all the functionality of the ball (along with physics).
 
-Worked with samardeep on teleportation of ball
+Worked with Samardeep on the teleportation of the ball.
+
+Added ball destroyed counter.
 
 ## Paramvir Singh Thind
 
+Worked on ball and maze wall textures.
+
+Worked with Shefreen to make the maze.
+
 ## Shreyas Dutt
 
+Added custom font on the ball-destroyed counter.
+
+Added "Ball-destroyed" overlay.
+
+Helped with textures.
+
 ## Shefreen Kaur
+
+Worked and created the maze.
+
+Added tree and applied collision on the tree.
 
 ## Manpreet Singh
 
