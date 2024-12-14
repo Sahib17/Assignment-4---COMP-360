@@ -67,11 +67,24 @@ Throws the ball by re-enabling physics, applying an impulse, and reparenting it 
 
 Worked on Invisible wall and its placement `Node 3D` and `Collision space 3D`.
 
-Copied Claw from the initial file to the main file.
+Copied and pasted claw from the initial file to the main file.
 
-Worked in collaboration with Sahib on ball teleportation and ball placement.
+Worked in collaboration with Sahib on ball teleportation.
+
+Updated ball code and made it not workable. when asked to fix the errors, he refused.
+
+Teleported ball once it goes in goal.
+
+Revolved Ramp but wasn't Implemented because it didn't align with the project
+
+![Ramp-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/d3a4b026-9d88-4124-8793-ef1f7cf63673)
+
 
 ## Sahibjeet Singh
+
+Created and implemented Ball and all the functionality of ball.
+
+Worked with samardeep on teleportation of ball
 
 ## Paramvir Singh Thind
 
